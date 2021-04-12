@@ -4,10 +4,12 @@ import com.sparta.mindcare.model.Doctor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-public class DoctorDetailReturn {
+import java.util.List;
 
+
+@Getter
+@Setter
+public class DoctorReturn {
     private Boolean ok;
-    private Doctor results;
+    private List<Doctor> results;
 }

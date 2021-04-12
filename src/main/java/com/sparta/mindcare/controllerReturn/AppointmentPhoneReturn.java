@@ -1,13 +1,11 @@
 package com.sparta.mindcare.controllerReturn;
 
-import com.sparta.mindcare.model.Doctor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class DoctorDetailReturn {
-
+public class AppointmentPhoneReturn {
     private Boolean ok;
-    private Doctor results;
+    private Long results;
 }
