@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AppointmentController {
 
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
 
     @GetMapping("/api/appointments/phone/{id}")
     public AppointmentPhoneReturn getDoctorPhone(@PathVariable Long id){

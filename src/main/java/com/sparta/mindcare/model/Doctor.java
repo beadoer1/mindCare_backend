@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Doctor {
+public class Doctor extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

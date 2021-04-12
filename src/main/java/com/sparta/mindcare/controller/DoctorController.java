@@ -16,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorController {
 
-    private DoctorRepository doctorRepository;
-    private DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
     @GetMapping("/api/doctors")
     public DoctorReturn getDoctors(){
