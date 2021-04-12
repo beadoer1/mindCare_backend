@@ -1,11 +1,13 @@
 package com.sparta.mindcare.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 
+@Getter // get 함수를 일괄적으로 만들어줍니다.
+@NoArgsConstructor // 기본 생성자를 만들어줍니다.
+@Entity // DB 테이블 역할을 합니다.
 public class User extends Timestamped{
     public User(String username, String password) {
         this.username = username;
