@@ -41,4 +41,11 @@ public class DoctorController {
     public void createDoctor(@RequestBody Doctor requestDoctor){
         doctorRepository.save(requestDoctor);
     }
+
+    @PostMapping("/api/doctors/all")
+    public void createDoctor(@RequestBody List<Doctor> requestDoctorAll){
+        for(Doctor doc : requestDoctorAll){
+            doctorRepository.save(doc);
+        }
+    }
 }

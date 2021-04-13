@@ -30,7 +30,7 @@ public class Doctor extends Timestamped{
     private String img;
 
     @ElementCollection
-    private Set<String> careers;
+    private List<String> careers;
 
     @ElementCollection
     private Set<String> specialties;
