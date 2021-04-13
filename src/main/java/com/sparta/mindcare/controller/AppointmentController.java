@@ -14,6 +14,7 @@ public class AppointmentController {
 
     private final DoctorRepository doctorRepository;
 
+
     @GetMapping("/api/appointments/phone/{id}")
     public AppointmentPhoneReturn getDoctorPhone(@PathVariable Long id){
         AppointmentPhoneReturn appointmentPhoneReturn = new AppointmentPhoneReturn();

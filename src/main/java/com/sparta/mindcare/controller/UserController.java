@@ -26,6 +26,7 @@ public class UserController {
         return userRepository.save(User.builder()
                 .username(user.get("username"))
                 .password(passwordEncoder.encode(user.get("password")))
+                .phone(user.get("phone"))
                 .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getId();
     }
