@@ -5,11 +5,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class Doctor {
+public class Doctor extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,11 +28,17 @@ public class Doctor {
     @Column
     private String img;
 
-    @OneToMany
-    @JoinColumn(name = "DOCTOR_ID")
-    private List<DoctorCareer> careers;
+    @ElementCollection
+    private Set<String> careers;
 
-    @ManyToMany
-    @JoinColumn(name = "DOCTOR_ID")
-    private List<DoctorSpecialty> specialties;
+    @ElementCollection
+    private Set<String> specialties;
+
+    @ElementCollection
+    private Set<String> daysOfWeek;
+
+    @OneToOne
+    @JoinColumn
+    private DoctorWorkingTime workingTime;
+
 }

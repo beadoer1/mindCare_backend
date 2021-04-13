@@ -6,21 +6,23 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
-public class DoctorCareer {
+public class DoctorWorkingTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column
-    private String career;
+    private Long startTime;
 
-    @ManyToOne
-    @JoinColumn(name = "DOCTOR_ID")
+    @Column
+    private Long endTime;
+
+    @OneToOne
+    @JoinColumn
     private Doctor doctor;
+
 }
