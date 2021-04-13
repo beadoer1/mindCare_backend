@@ -17,12 +17,25 @@ public class DoctorController {
     private final DoctorRepository doctorRepository;
     private final DoctorService doctorService;
 
-    @GetMapping("/api/doctors")
+    @GetMapping("/api/doctors") // 상담사 전체 불러오기 api
     public DoctorReturn getDoctors(){
         DoctorReturn doctorReturn = new DoctorReturn();
         List<Doctor> doctors = doctorRepository.findAll();
         doctorReturn.setOk(true);
         doctorReturn.setResults(doctors);
+        return doctorReturn;
+    }
+
+    @PostMapping("/api/doctors/categories") // Category(Specialty) 별 상담사 List 불러오기
+    public DoctorReturn getDoctorsCategories(@RequestBody List<String> requestCategories){
+        DoctorReturn doctorReturn = new DoctorReturn();
+        List<Doctor> returnList = doctorRepository.findAllBySpecialties(requestCategories.get(0));
+        for(String category : requestCategories){
+            List<Doctor> doctorListCategory = doctorRepository.findAllBySpecialties(category);
+            returnList.retainAll(doctorListCategory);
+        }
+        doctorReturn.setOk(true);
+        doctorReturn.setResults(returnList);
         return doctorReturn;
     }
 
