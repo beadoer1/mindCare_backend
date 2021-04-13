@@ -1,32 +1,71 @@
 package com.sparta.mindcare.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Getter // get 함수를 일괄적으로 만들어줍니다.
-@NoArgsConstructor // 기본 생성자를 만들어줍니다.
-@Entity // DB 테이블 역할을 합니다.
-public class User extends Timestamped{
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+public class User extends Timestamped implements UserDetails {
 
-    }
-    // ID가 자동으로 생성 및 증가합니다.
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 반드시 값을 가지도록 합니다.
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-//    @Column(nullable = false)
-//    private String email;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

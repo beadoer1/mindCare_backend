@@ -31,6 +31,13 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    // Thymeleaf (뷰 템플릿 엔진)
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // 스프링 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
 }
 
 test {
