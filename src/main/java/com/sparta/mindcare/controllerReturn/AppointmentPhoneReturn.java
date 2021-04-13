@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class AppointmentPhoneReturn {
     private Boolean ok;
-    private Long results;
+    private String results;
 }

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -20,7 +21,7 @@ public class Doctor extends Timestamped{
     private String name;
 
     @Column
-    private Long phone;
+    private String phone;
 
     @Column
     private String address;
@@ -35,10 +36,9 @@ public class Doctor extends Timestamped{
     private Set<String> specialties;
 
     @ElementCollection
-    private Set<String> daysOfWeek;
+    private List<String> daysOfWeek;
 
-    @OneToOne
-    @JoinColumn
-    private DoctorWorkingTime workingTime;
+    @ElementCollection
+    private Map<String,Long> workingTime;
 
 }

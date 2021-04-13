@@ -20,7 +20,7 @@ public class AppointmentController {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
         );
-        Long phone = doctor.getPhone();
+        String phone = doctor.getPhone();
 
         appointmentPhoneReturn.setOk(true);
         appointmentPhoneReturn.setResults(phone);
