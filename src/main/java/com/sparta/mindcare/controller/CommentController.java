@@ -18,7 +18,5 @@ public class CommentController {
     @GetMapping("/user/comment") //id: doctor id
     public String writeComment(){
         return "Hello";
-
     }
-
 }
