@@ -18,7 +18,7 @@ public class Comment extends Timestamped {
     private Long id;
 
     @Column
-    private String writer;
+    private String username;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String writing;
@@ -30,6 +30,7 @@ public class Comment extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
 
 
   
