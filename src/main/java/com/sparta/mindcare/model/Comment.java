@@ -1,5 +1,7 @@
 package com.sparta.mindcare.model;
 
+import com.sparta.mindcare.dto.CommentDto;
+import com.sparta.mindcare.dto.UserDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,4 +30,7 @@ public class Comment extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+
+  
 }
