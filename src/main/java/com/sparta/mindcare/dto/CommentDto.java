@@ -11,8 +11,7 @@ public class CommentDto {
 
     private String writing;
 
-    private Doctor doctor;
+    private Long doctorId;
 
-    private User user;
 
 }
