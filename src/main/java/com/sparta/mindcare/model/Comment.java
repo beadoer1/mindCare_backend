@@ -18,7 +18,7 @@ public class Comment extends Timestamped {
     @Column
     private String writer;
 
-    @Column
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String writing;
 
     @ManyToOne
