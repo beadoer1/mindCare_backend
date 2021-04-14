@@ -1,8 +1,8 @@
 package com.sparta.mindcare.model;
 
+import com.sparta.mindcare.dto.DoctorDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 public class Doctor extends Timestamped{
@@ -19,13 +18,13 @@ public class Doctor extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String phone;
 
-    @Column
+    @Column(nullable = false)
     private String address;
 
     @Column
@@ -43,4 +42,26 @@ public class Doctor extends Timestamped{
     @ElementCollection
     private Map<String,Long> workingTime;
 
+
+    public Doctor(DoctorDto requestDto){
+        this.name = requestDto.getName();
+        this.phone = requestDto.getPhone();
+        this.address = requestDto.getAddress();
+        this.img = requestDto.getImg();
+        this.careers = requestDto.getCareers();
+        this.specialties = requestDto.getSpecialties();
+        this.daysOfWeek = requestDto.getDaysOfWeek();
+        this.workingTime = requestDto.getWorkingTime();
+    }
+
+    public void update(DoctorDto requestDto){
+        this.name = requestDto.getName();
+        this.phone = requestDto.getPhone();
+        this.address = requestDto.getAddress();
+        this.img = requestDto.getImg();
+        this.careers = requestDto.getCareers();
+        this.specialties = requestDto.getSpecialties();
+        this.daysOfWeek = requestDto.getDaysOfWeek();
+        this.workingTime = requestDto.getWorkingTime();
+    }
 }

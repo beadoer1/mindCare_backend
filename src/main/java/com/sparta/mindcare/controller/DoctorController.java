@@ -2,6 +2,7 @@ package com.sparta.mindcare.controller;
 
 import com.sparta.mindcare.controllerReturn.DoctorDetailReturn;
 import com.sparta.mindcare.controllerReturn.DoctorReturn;
+import com.sparta.mindcare.dto.DoctorDto;
 import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.DoctorService;
@@ -63,22 +64,26 @@ public class DoctorController {
 
     //상담사 리스트 추가
     @PostMapping("/api/doctors/all")
-    public void createDoctor(@RequestBody List<Doctor> requestDoctorAll){
-        for(Doctor doc : requestDoctorAll){
-            doctorRepository.save(doc);
+    public void createDoctor(@RequestBody List<DoctorDto> requestDtoList){
+        for(DoctorDto docDto : requestDtoList){
+            Doctor doctor = new Doctor(docDto);
+            doctorRepository.save(doctor);
         }
     }
 
     //상담사 리스트 추가
     @PutMapping("/api/doctors/all")
     @Transactional
-    public void updateDoctor(@RequestBody List<Doctor> requestDoctorAll){
-        for(Doctor doc : requestDoctorAll){
-            Doctor doctorUpdate = doctorRepository.findById(doc.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("해당 ID의 상담사가 없습니다.")
-            );
-            doctorUpdate.setImg(doc.getImg());
+    public void updateDoctor(@RequestBody List<DoctorDto> requestDtoList){
+        for(DoctorDto docDto : requestDtoList){
+                Long id = docDto.getId();
+                doctorService.update(id,docDto);
         }
+    }
+
+    @DeleteMapping("/api/doctors/{id}")
+    public void deleteDoctor(@PathVariable Long id){
+        doctorRepository.deleteById(id);
     }
 
 }

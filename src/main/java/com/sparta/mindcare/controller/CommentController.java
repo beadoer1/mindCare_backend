@@ -12,13 +12,4 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
 
-
-    @GetMapping("/user/comment")
-    public void createCommnent(RequestBody CommnetDto requestDto, @AuthenticationPrincipal User user){
-
-
-
-    }
-
-
 }
