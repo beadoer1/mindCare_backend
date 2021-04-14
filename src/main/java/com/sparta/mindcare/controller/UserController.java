@@ -27,7 +27,6 @@ public class UserController {
                 .username(user.get("username"))
                 .password(passwordEncoder.encode(user.get("password")))
                 .phone(user.get("phone"))
-                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build()).getId();
     }
 
@@ -39,6 +38,6 @@ public class UserController {
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        return jwtTokenProvider.createToken(member.getUsername());
     }
 }
