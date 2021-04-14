@@ -8,6 +8,7 @@ import com.sparta.mindcare.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -68,5 +69,16 @@ public class DoctorController {
         }
     }
 
+    //상담사 리스트 추가
+    @PutMapping("/api/doctors/all")
+    @Transactional
+    public void updateDoctor(@RequestBody List<Doctor> requestDoctorAll){
+        for(Doctor doc : requestDoctorAll){
+            Doctor doctorUpdate = doctorRepository.findById(doc.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("해당 ID의 상담사가 없습니다.")
+            );
+            doctorUpdate.setImg(doc.getImg());
+        }
+    }
 
 }

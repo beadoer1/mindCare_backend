@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)//생성/변경 시간을 자동으로 업데이트한다.
-public class Timestamped {
+public abstract class Timestamped {
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
