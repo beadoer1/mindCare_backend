@@ -31,9 +31,9 @@ public class DoctorController {
         // 교집합을 구해야하므로 List에 첫번째 category로 검색한 List를 넣어둔다.
         List<Doctor> doctorList = doctorRepository.findAllBySpecialties(requestCategories.get(0));
         for(String category : requestCategories){
-            List<Doctor> doctorListCategory = doctorRepository.findAllBySpecialties(category);
+            List<Doctor> doctorListOthers = doctorRepository.findAllBySpecialties(category);
             // 교집합 반환하는 메서드 retainAll() -> List에 저장된 객체 중에서 주어진 컬렉션간 공통된 것들만을 남기고 나머지는 삭제한다
-            doctorList.retainAll(doctorListCategory);
+            doctorList.retainAll(doctorListOthers);
         }
         return new DoctorReturn(true, doctorList);
     }
@@ -67,9 +67,8 @@ public class DoctorController {
         }
     }
 
-    //상담사 리스트 추가
+    //상담사 리스트 수정
     @PutMapping("/api/doctors/all")
-    @Transactional
     public void updateDoctor(@RequestBody List<DoctorDto> requestDtoList){
         for(DoctorDto docDto : requestDtoList){
                 Long id = docDto.getId();
@@ -81,5 +80,4 @@ public class DoctorController {
     public void deleteDoctor(@PathVariable Long id){
         doctorRepository.deleteById(id);
     }
-
 }

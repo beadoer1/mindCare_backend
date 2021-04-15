@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final DoctorRepository doctorRepository;
-    @Transactional
+
     public void createComment(CommentDto commentDto, Long doctorId, User user){
 
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
@@ -30,11 +30,10 @@ public class CommentService {
     @Transactional
     public boolean updateComment(CommentDto commentDto, Long commentId, User user){
 
-
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new NullPointerException("해당 후기가 존재하지 않습니다.")
         );
-        if(comment.getUser().getId()==user.getId()){
+        if(comment.getUser().equals(user)){
             comment.update(commentDto);
             return true;
         }

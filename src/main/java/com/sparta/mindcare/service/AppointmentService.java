@@ -24,12 +24,12 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
 
-    public AppointmentDateReturn getPossibleTime(Long doctorId, String requestDate){
+    public AppointmentDateReturn getPossibleTime(Long doctorId, String requestDate){ // "2021-04-16"
         // 1. 사용자가 선택한 날짜에 상담사가 근무하는지 확인
         // 사용자가 선택한 날짜를 LocalDate 객체로 바꿔 요일 format으로 변경
-        LocalDate appointmentDate = LocalDate.parse(requestDate);
+        LocalDate appointmentDate = LocalDate.parse(requestDate); // "2021-04-16" -> LocalDate 인스턴스화
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E").withLocale(Locale.forLanguageTag("ko"));
-        String checkDayOfWeek = appointmentDate.format(formatter);
+        String checkDayOfWeek = appointmentDate.format(formatter); // LocalDate -> 요일 String 으로 만듬 "금"
 
         // 상담사 정보를 가져와 근무 요일 List를 불러옴
         Doctor doctor;
@@ -68,8 +68,8 @@ public class AppointmentService {
         List<AppointmentTimeCheck> timeList = new ArrayList<>();
 
         // 기 예약 시간들을 시간대 리스트에 반영
-        for(Long i = startTime; i < endTime; i++){
-            AppointmentTimeCheck timecheck = new AppointmentTimeCheck(Math.toIntExact(i));
+        for(Long i = startTime; i < endTime; i++){ // 9시 ~ 16시 근무인 경우 9시 ~ 9시 50분 , ... , 15시 ~ 15시 50분 까지 상담
+            AppointmentTimeCheck timecheck = new AppointmentTimeCheck(Math.toIntExact(i)); // Math.toIntExact 'Long -> int'
             timecheck.setPossibleAppointment(!alreadyAppointmentTimeList.contains(timecheck.getTime()));
             timeList.add(timecheck);
         }

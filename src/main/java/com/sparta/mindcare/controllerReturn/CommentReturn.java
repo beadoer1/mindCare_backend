@@ -8,4 +8,5 @@ import lombok.Setter;
 public class CommentReturn {
     private Boolean ok;
     private String msg;
+
 }

@@ -45,15 +45,12 @@ public class UserController {
             }
             String token= jwtTokenProvider.createToken(member.getUsername());
             userReturn.setToken(token);
-
-
         }
         catch(IllegalArgumentException e){
             userReturn.setOk(false);
             userReturn.setMsg(e.getMessage());
             return userReturn;
         }
-
         userReturn.setOk(true);
         userReturn.setMsg("로그인이 완료되었습니다.");
         return userReturn;

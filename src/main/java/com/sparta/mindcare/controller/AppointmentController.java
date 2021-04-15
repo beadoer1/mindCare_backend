@@ -67,7 +67,6 @@ public class AppointmentController {
             return new AppointmentReturn(false, appointmentList, "예약 정보가 존재하지 않습니다.");
         }
         return new AppointmentReturn(true, appointmentList, "검색 성공!");
-
     }
 
     // doctor 예약 가능 날짜, 시간 확인
