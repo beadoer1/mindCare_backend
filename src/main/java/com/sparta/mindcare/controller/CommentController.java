@@ -40,13 +40,30 @@ public class CommentController {
     }
 
 
-    @GetMapping("/api/user/test")
-    public User test(@AuthenticationPrincipal User user){
-        if(user==null) System.out.println("null");
-        else
-            System.out.println("not null");
-        return user;
+
+
+    @PostMapping("/user/comment/{commentId}")
+    public CommentReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
+        CommentReturn commentReturn = new CommentReturn();
+        Comment comment =commentRepository.findById(commentId).orElseThrow(
+                ()->new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
+        );
+        if(comment.getUser().getId()==user.getId()){
+            commentRepository.deleteById(commentId);
+            commentReturn.setOk(true);
+            commentReturn.setMsg("삭제가 완료되었습니다.");
+            return commentReturn;
+
+        }
+        commentReturn.setOk(false);
+        commentReturn.setMsg("삭제는 작성자 본인만 가능합니다.");
+        return commentReturn;
+
     }
+
+    
+
+
 
 
 }

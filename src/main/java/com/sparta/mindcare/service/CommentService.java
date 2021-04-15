@@ -28,8 +28,8 @@ public class CommentService {
         String writing = commentDto.getWriting();
         Comment comment = new Comment(writing, doctor, user);
         commentRepository.save(comment);
-
-
     }
+
+
 
 }
