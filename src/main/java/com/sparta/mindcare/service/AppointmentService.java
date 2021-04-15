@@ -23,7 +23,7 @@ public class AppointmentService {
 
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
-    // ※ 오늘 이전 날짜 선택 시 불가하다고 반환하는 로직 필요할 듯
+
     public AppointmentDateReturn getPossibleTime(Long doctorId, String requestDate){
         // 1. 사용자가 선택한 날짜에 상담사가 근무하는지 확인
         // 사용자가 선택한 날짜를 LocalDate 객체로 바꿔 요일 format으로 변경
@@ -43,8 +43,12 @@ public class AppointmentService {
 
         List<String> daysOfWeek = doctor.getDaysOfWeek();
 
+        // 예약희망일이 오늘 이전의 날인지 확인하여 그럴 경우 error 메시지 반환
+        if(appointmentDate.isBefore(LocalDate.now())){
+            return new AppointmentDateReturn(false,null,"이미 지난 날짜입니다. 날짜를 다시 확인해주세요.");
+        }
         // 상담사의 근무 요일 List에 선택한 날짜의 요일이 포함되어있는지 확인 후 없는 경우 false 반환
-        if(!daysOfWeek.contains(checkDayOfWeek)){
+        else if(!daysOfWeek.contains(checkDayOfWeek)){
             return new AppointmentDateReturn(false,null,"상담사가 근무하지 않는 날짜입니다. 근무일을 확인해주세요!");
         }
 
