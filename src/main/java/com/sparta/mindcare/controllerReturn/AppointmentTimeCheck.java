@@ -5,8 +5,8 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 
-@Setter
 @Getter
+@Setter // 시간을 확인 후 possibleAppointment 를 넣어줘야하므로 @Setter 필요
 public class AppointmentTimeCheck {
     private LocalTime time;
     private LocalTime timeEnd;

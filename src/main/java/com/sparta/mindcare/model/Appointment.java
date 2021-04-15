@@ -23,6 +23,9 @@ public class Appointment extends Timestamped{
     @Column(nullable = false)
     private LocalTime time;
 
+    @Column(nullable = false)
+    private LocalTime endTime;
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private Doctor doctor;
@@ -36,5 +39,6 @@ public class Appointment extends Timestamped{
         this.doctor = requestDto.getDoctor();
         this.date = requestDto.getDate();
         this.time = requestDto.getTime();
+        this.endTime = time.plusMinutes(50);
     }
 }

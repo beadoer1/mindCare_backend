@@ -8,8 +8,12 @@ import java.util.List;
 
 
 @Getter
-@Setter
 public class DoctorReturn {
     private Boolean ok;
     private List<Doctor> results;
+
+    public DoctorReturn(Boolean ok, List<Doctor> doctorList){
+        this.ok = ok;
+        this.results = doctorList;
+    }
 }

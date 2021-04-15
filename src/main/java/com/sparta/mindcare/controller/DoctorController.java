@@ -22,49 +22,47 @@ public class DoctorController {
     //상담사 전체
     @GetMapping("/api/doctors")
     public DoctorReturn getDoctors(){
-        DoctorReturn doctorReturn = new DoctorReturn();
-        List<Doctor> doctors = doctorRepository.findAll();
-        doctorReturn.setOk(true);
-        doctorReturn.setResults(doctors);
-        return doctorReturn;
+        List<Doctor> doctorList = doctorRepository.findAll();
+        return new DoctorReturn(true, doctorList);
     }
 
     @PostMapping("/api/doctors/categories") // Category(Specialty) 별 상담사 List 불러오기
     public DoctorReturn getDoctorsCategories(@RequestBody List<String> requestCategories){
-        DoctorReturn doctorReturn = new DoctorReturn();
-        List<Doctor> returnList = doctorRepository.findAllBySpecialties(requestCategories.get(0));
+        // 교집합을 구해야하므로 List에 첫번째 category로 검색한 List를 넣어둔다.
+        List<Doctor> doctorList = doctorRepository.findAllBySpecialties(requestCategories.get(0));
         for(String category : requestCategories){
             List<Doctor> doctorListCategory = doctorRepository.findAllBySpecialties(category);
-            returnList.retainAll(doctorListCategory);
+            // 교집합 반환하는 메서드 retainAll() -> List에 저장된 객체 중에서 주어진 컬렉션간 공통된 것들만을 남기고 나머지는 삭제한다
+            doctorList.retainAll(doctorListCategory);
         }
-        doctorReturn.setOk(true);
-        doctorReturn.setResults(returnList);
-        return doctorReturn;
+        return new DoctorReturn(true, doctorList);
     }
 
     //상담사 상세
     @GetMapping("/api/doctors/{id}")
     public DoctorDetailReturn getDoctorDetail(@PathVariable Long id){
-        DoctorDetailReturn doctorDetailReturn = new DoctorDetailReturn();
-        Doctor doctor = doctorRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
-        );
-        doctorDetailReturn.setOk(true);
-        doctorDetailReturn.setResults(doctor);
-        return doctorDetailReturn;
+        try {
+            Doctor doctor = doctorRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
+            );
+            return new DoctorDetailReturn(true, doctor,"반환 성공!");
+        }catch(IllegalArgumentException e){
+            return new DoctorDetailReturn(false,null,e.getMessage());
+        }
     }
 
     //상담사 추가
     @PostMapping("/api/doctors")
-    public void createDoctor(@RequestBody Doctor requestDoctor){
-        doctorRepository.save(requestDoctor);
+    public void createDoctor(@RequestBody DoctorDto requestDto){
+        Doctor doctor = new Doctor(requestDto);
+        doctorRepository.save(doctor);
     }
 
     //상담사 리스트 추가
     @PostMapping("/api/doctors/all")
     public void createDoctor(@RequestBody List<DoctorDto> requestDtoList){
-        for(DoctorDto docDto : requestDtoList){
-            Doctor doctor = new Doctor(docDto);
+        for(DoctorDto doctorDto : requestDtoList){
+            Doctor doctor = new Doctor(doctorDto);
             doctorRepository.save(doctor);
         }
     }
