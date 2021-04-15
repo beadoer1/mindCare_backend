@@ -4,9 +4,6 @@ import com.sparta.mindcare.dto.CommentDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.CommentRepository;
-import com.sparta.mindcare.repository.DoctorRepository;
-import com.sparta.mindcare.service.CommentService;
-import com.sparta.mindcare.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentRepository commentRepository;
-    private final CommentService commentService;
 
 
     @PostMapping("/user/comment/{doctorId}")

@@ -1,11 +1,14 @@
 package com.sparta.mindcare.controllerReturn;
 
-import com.sparta.mindcare.util.Timetable;
+import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
+@Getter
 public class AppointmentDateReturn {
     private Boolean ok;
-    private Timetable results;
+    private List<AppointmentTimeCheck> results;
     private String msg;
 }
