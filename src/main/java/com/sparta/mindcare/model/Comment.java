@@ -32,14 +32,15 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable=false)
     private User user;
 
-    public Comment(String writing, Doctor doctor, User user){
+    public Comment(CommentDto commentDto, Doctor doctor, User user){
         this.username=user.getUsername();
-        this.writing=writing;
+        this.writing=commentDto.getWriting();
         this.doctor=doctor;
         this.user= user;
-
-
     }
 
+    public void update(CommentDto commentDto){
+        this.writing = commentDto.getWriting();
+    }
   
 }

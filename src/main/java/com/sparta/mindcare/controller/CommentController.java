@@ -33,7 +33,7 @@ public class CommentController {
                 return commentReturn;
             }
         }
-        commentService.createComment(commentDto, user);
+        commentService.createComment(commentDto, doctorId, user);
         commentReturn.setOk(true);
         commentReturn.setMsg("후기작성이 완료되었습니다.");
         return commentReturn;
@@ -42,7 +42,7 @@ public class CommentController {
 
 
 
-    @PostMapping("/user/comment/{commentId}")
+    @DeleteMapping("/user/comment/{commentId}")
     public CommentReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn = new CommentReturn();
         Comment comment =commentRepository.findById(commentId).orElseThrow(
@@ -58,7 +58,23 @@ public class CommentController {
         commentReturn.setOk(false);
         commentReturn.setMsg("삭제는 작성자 본인만 가능합니다.");
         return commentReturn;
+    }
 
+    @PutMapping("/user/comment/{commentId}")
+    public CommentReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
+        CommentReturn commentReturn = new CommentReturn();
+
+
+        if(commentService.updateComment(commentDto, commentId, user)){
+            commentReturn.setOk(true);
+            commentReturn.setMsg("수정이 완료되었습니다.");
+        }
+        else{
+            commentReturn.setOk(false);
+            commentReturn.setMsg("수정은 작성자 본인만 가능합니다");
+        }
+
+        return commentReturn;
     }
 
     

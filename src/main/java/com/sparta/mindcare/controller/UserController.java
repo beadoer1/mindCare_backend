@@ -1,6 +1,7 @@
 package com.sparta.mindcare.controller;
 
 import com.sparta.mindcare.config.JwtTokenProvider;
+import com.sparta.mindcare.controllerReturn.UserReturn;
 import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     // 회원가입
-    @PostMapping("/join")
+    @PostMapping("/api/signup")
     public Long join(@RequestBody Map<String, String> user) {
         return userRepository.save(User.builder()
                 .username(user.get("username"))
@@ -31,13 +32,26 @@ public class UserController {
     }
 
     // 로그인
-    @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByUsername(user.get("username"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 ID 입니다."));
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+    @PostMapping("/api/login")
+    public UserReturn login(@RequestBody Map<String, String> user) {
+
+        UserReturn userReturn = new UserReturn();
+        try{
+            User member = userRepository.findByUsername(user.get("username"))
+                    .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 ID 입니다."));
+            if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+                throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            }
+            jwtTokenProvider.createToken(member.getUsername());
         }
-        return jwtTokenProvider.createToken(member.getUsername());
+        catch(IllegalArgumentException e){
+            userReturn.setOk(false);
+            userReturn.setMsg(e.getMessage());
+            return userReturn;
+        }
+
+        userReturn.setOk(true);
+        userReturn.setMsg("로그인이 완료되었습니다.");
+        return userReturn;
     }
 }

@@ -18,18 +18,27 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final DoctorRepository doctorRepository;
     @Transactional
-    public void createComment(CommentDto commentDto, User user){
-
-        Long doctorId=commentDto.getDoctorId();
+    public void createComment(CommentDto commentDto, Long doctorId, User user){
 
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
-                () -> new IllegalArgumentException("해당 Id의 상담사가 존재하지 않습니다.")
+                () -> new NullPointerException("해당 Id의 상담사가 존재하지 않습니다.")
         );
-        String writing = commentDto.getWriting();
-        Comment comment = new Comment(writing, doctor, user);
+        Comment comment = new Comment(commentDto, doctor, user);
         commentRepository.save(comment);
     }
 
+    @Transactional
+    public boolean updateComment(CommentDto commentDto, Long commentId, User user){
 
 
+        Comment comment =commentRepository.findById(commentId).orElseThrow(
+                ()->new NullPointerException("해당 후기가 존재하지 않습니다.")
+        );
+        if(comment.getUser().getId()==user.getId()){
+            comment.update(commentDto);
+            return true;
+        }
+        else
+            return false;
+    }
 }
