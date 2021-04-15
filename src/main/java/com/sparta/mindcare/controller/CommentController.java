@@ -20,9 +20,15 @@ public class CommentController {
 
 
 
-    @PostMapping("/user/comment/{doctorId}")
+    @PostMapping("/api/comment/{doctorId}")
     public CommentReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn= new CommentReturn();
+
+        if(user==null){
+            commentReturn.setOk(false);
+            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
+            return commentReturn;
+        }
         List<Comment> commentList =commentRepository.findAll();
         Long userId = user.getId();
         for(Comment comment : commentList){
@@ -42,9 +48,15 @@ public class CommentController {
 
 
 
-    @DeleteMapping("/user/comment/{commentId}")
+    @DeleteMapping("/api/comment/{commentId}")
     public CommentReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn = new CommentReturn();
+        if(user==null){
+            commentReturn.setOk(false);
+            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
+            return commentReturn;
+        }
+
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
         );
@@ -60,10 +72,14 @@ public class CommentController {
         return commentReturn;
     }
 
-    @PutMapping("/user/comment/{commentId}")
+    @PutMapping("/api/comment/{commentId}")
     public CommentReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn = new CommentReturn();
-
+        if(user==null){
+            commentReturn.setOk(false);
+            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
+            return commentReturn;
+        }
 
         if(commentService.updateComment(commentDto, commentId, user)){
             commentReturn.setOk(true);
@@ -77,7 +93,22 @@ public class CommentController {
         return commentReturn;
     }
 
-    
+    @GetMapping("/api/test/{id}")
+    public CommentReturn test(@AuthenticationPrincipal User user, @PathVariable Long id){
+        CommentReturn commentReturn = new CommentReturn();
+        if(user==null){
+            commentReturn.setOk(false);
+            commentReturn.setMsg("토큰이 잘못됨");
+        }
+        else{
+            commentReturn.setOk(true);
+            if(user.getId()==id)
+                commentReturn.setMsg("해당 토큰 맞음");
+            else
+                commentReturn.setMsg("토큰은 올바르지만 해당 유저의 정보가 안들어가 있음");
+        }
+        return commentReturn;
+    }
 
 
 

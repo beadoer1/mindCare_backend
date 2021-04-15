@@ -8,4 +8,5 @@ import lombok.Setter;
 public class UserReturn {
     private Boolean ok;
     private String msg;
+    private String token;
 }

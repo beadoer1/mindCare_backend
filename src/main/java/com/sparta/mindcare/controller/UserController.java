@@ -36,13 +36,17 @@ public class UserController {
     public UserReturn login(@RequestBody Map<String, String> user) {
 
         UserReturn userReturn = new UserReturn();
+
         try{
             User member = userRepository.findByUsername(user.get("username"))
                     .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 ID 입니다."));
             if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
                 throw new IllegalArgumentException("잘못된 비밀번호입니다.");
             }
-            jwtTokenProvider.createToken(member.getUsername());
+            String token= jwtTokenProvider.createToken(member.getUsername());
+            userReturn.setToken(token);
+
+
         }
         catch(IllegalArgumentException e){
             userReturn.setOk(false);
