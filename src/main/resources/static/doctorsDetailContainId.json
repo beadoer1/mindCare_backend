@@ -116,7 +116,7 @@
     "address" : "서울특별시 강남구 논현로 SCC-01(스파르타동)",
     "img" : "http://15.165.205.40/images/2_img_01.png",
     "careers" : ["상담 경력 6년 이상","현재)스파르타코딩 심리센터 원장","학력)한국과학기술원 전산심리학 전공"],
-    "specialties" : ["스트레스장애", "성인발달장애", "직장", "연"],
+    "specialties" : ["스트레스장애", "성인발달장애", "직장", "연애"],
     "daysOfWeek" : ["월","화","수","목","금","토"],
     "workingTime" : {"startTime" : 9, "endTime" : 21}
   },
@@ -204,7 +204,7 @@
     "address" : "서울특별시 강남구 논현로 SCC-09(스파르타동)",
     "img" : "http://15.165.205.40/images/2_img_09.png",
     "careers" : ["상담 경력 2년 이상","현재)스파르타코딩 심리센터 웹심리치료사"],
-    "specialties" : ["친구", "따돌림"],
+    "specialties" : ["친구", "직장", "진로", "따돌림"],
     "daysOfWeek" : ["월","화","목","금","토"],
     "workingTime" : {"startTime" : 9, "endTime" : 18}
   },

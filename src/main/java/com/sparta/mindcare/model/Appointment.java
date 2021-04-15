@@ -24,11 +24,11 @@ public class Appointment extends Timestamped{
     private LocalTime time;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private Doctor doctor;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private User user;
 
     public Appointment(AppointmentDto requestDto){

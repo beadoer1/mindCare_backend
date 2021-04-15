@@ -15,4 +15,11 @@ public class AppointmentDto {
     private Doctor doctor;
     private LocalDate date;
     private LocalTime time;
+
+    public AppointmentDto(User user,Doctor doctor,LocalDate date, LocalTime time){
+        this.user = user;
+        this.doctor = doctor;
+        this.date = date;
+        this.time = time;
+    }
 }

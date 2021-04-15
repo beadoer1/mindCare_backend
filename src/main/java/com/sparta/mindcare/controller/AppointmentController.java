@@ -3,6 +3,7 @@ package com.sparta.mindcare.controller;
 import com.sparta.mindcare.controllerReturn.AppointmentDateReturn;
 import com.sparta.mindcare.controllerReturn.AppointmentPhoneReturn;
 import com.sparta.mindcare.controllerReturn.AppointmentTimeCheck;
+import com.sparta.mindcare.dto.AppointmentDto;
 import com.sparta.mindcare.model.Appointment;
 import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.model.User;
@@ -40,7 +41,20 @@ public class AppointmentController {
         return appointmentPhoneReturn;
     }
 
-    @PostMapping("/api/appointments/date/{doctorId}")
+    @PostMapping("/api/appointments/{doctorId}")
+    public void createAppointment(@PathVariable Long doctorId, @AuthenticationPrincipal User user, @RequestBody Map<String,String> requestDateTime){
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new IllegalArgumentException("상담사가 존재하지 않습니다.")
+        );
+        LocalDate date = LocalDate.parse(requestDateTime.get("date"));
+        LocalTime time = LocalTime.parse(requestDateTime.get("time"));
+        AppointmentDto requestDto = new AppointmentDto(user,doctor,date,time);
+        Appointment appointment = new Appointment(requestDto);
+        appointmentRepository.save(appointment);
+    }
+
+
+    @PostMapping("/api/appointments/{doctorId}/date")
     public AppointmentDateReturn getPossibleTime(@PathVariable Long doctorId, @RequestBody String requestDate){ // "2021-04-14"
         // 사용자가 선택한 날짜에 상담사가 근무하는지 확인 필요함
         // 사용자가 선택한 날짜를 LocalDate 객체로 바꿔 요일 format으로 변경
@@ -71,19 +85,18 @@ public class AppointmentController {
         Long endTime = workingTime.get("endTime");
 
         // 해당일에 사전에 예약된 List를 불러옴 // Doctor로도 거르는 작업 필요
-//        List<Appointment> alreadyAppointmentList = appointmentRepository.findAllByDate(appointmentDate);
-//        List<LocalTime> alreadyAppointmentTimeList = new ArrayList<>();
-//        for(Appointment alreadyAppointment : alreadyAppointmentList) {
-//            alreadyAppointmentTimeList.add(alreadyAppointment.getTime());
-//        }
+        List<Appointment> alreadyAppointmentList = appointmentRepository.findAllByDate(appointmentDate);
+        List<LocalTime> alreadyAppointmentTimeList = new ArrayList<>();
+        for(Appointment alreadyAppointment : alreadyAppointmentList) {
+            alreadyAppointmentTimeList.add(alreadyAppointment.getTime());
+        }
         // 반환값에 넣을 시간대 리스트를 생성
         List<AppointmentTimeCheck> timeList = new ArrayList<>();
 
         // 기 예약 시간들을 시간대 리스트에 반영
         for(Long i = startTime; i < endTime; i++){
             AppointmentTimeCheck timecheck = new AppointmentTimeCheck(Math.toIntExact(i));
-//            timecheck.setPossibleAppointment(!alreadyAppointmentTimeList.contains(timecheck.getTime()));
-            timecheck.setPossibleAppointment(true);
+            timecheck.setPossibleAppointment(!alreadyAppointmentTimeList.contains(timecheck.getTime()));
             timeList.add(timecheck);
         }
 
