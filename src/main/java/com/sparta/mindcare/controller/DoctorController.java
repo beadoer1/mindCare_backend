@@ -19,7 +19,6 @@ public class DoctorController {
     private final DoctorRepository doctorRepository;
     private final DoctorService doctorService;
 
-
     //상담사 전체
     @GetMapping("/api/doctors")
     public DoctorReturn getDoctors(){
@@ -42,7 +41,6 @@ public class DoctorController {
         doctorReturn.setResults(returnList);
         return doctorReturn;
     }
-
 
     //상담사 상세
     @GetMapping("/api/doctors/{id}")
