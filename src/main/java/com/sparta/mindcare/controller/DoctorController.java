@@ -3,7 +3,9 @@ package com.sparta.mindcare.controller;
 import com.sparta.mindcare.controllerReturn.DoctorDetailReturn;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.dto.DoctorDto;
+import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
+import com.sparta.mindcare.repository.CommentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 public class DoctorController {
 
     private final DoctorRepository doctorRepository;
+    private final CommentRepository commentRepository;
     private final DoctorService doctorService;
 
     //상담사 전체
@@ -44,9 +47,11 @@ public class DoctorController {
             Doctor doctor = doctorRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
             );
-            return new DoctorDetailReturn(true, doctor,"반환 성공!");
+            List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
+
+            return new DoctorDetailReturn(true, doctor, comments,"반환 성공!");
         }catch(IllegalArgumentException e){
-            return new DoctorDetailReturn(false,null,e.getMessage());
+            return new DoctorDetailReturn(false,null, null, e.getMessage());
         }
     }
 
