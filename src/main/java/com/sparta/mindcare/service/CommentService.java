@@ -16,25 +16,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final DoctorRepository doctorRepository;
-    @Transactional
-    public void createComment(CommentDto commentDto, Long doctorId, User user){
 
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
-                () -> new NullPointerException("해당 Id의 상담사가 존재하지 않습니다.")
-        );
-        Comment comment = new Comment(commentDto, doctor, user);
+    @Transactional
+    public void createComment(CommentDto commentDto){
+
+        Comment comment = new Comment(commentDto);
         commentRepository.save(comment);
     }
 
     @Transactional
-    public boolean updateComment(CommentDto commentDto, Long commentId, User user){
+    public boolean updateComment(CommentDto commentDto){
 
-
+        Long commentId= commentDto.getId();
+        User user = commentDto.getUser();
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new NullPointerException("해당 후기가 존재하지 않습니다.")
         );
-        if(comment.getUser().getId()==user.getId()){
+        if(comment.getUser().equals(user)){
             comment.update(commentDto);
             return true;
         }
