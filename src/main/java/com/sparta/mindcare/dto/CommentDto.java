@@ -10,5 +10,7 @@ import javax.persistence.*;
 public class CommentDto {
 
     private String writing;
+    private Doctor doctor;
+    private User user;
 
 }
