@@ -21,10 +21,9 @@ public class CommentController {
     private final DoctorRepository doctorRepository;
     private final CommentService commentService;
 
-
-
-    @PostMapping("/api/comment/{doctorId}")
+    @PostMapping("/api/comments/{doctorId}")
     public CommentReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
+
         CommentReturn commentReturn= new CommentReturn();
 
         if(user==null){
@@ -33,21 +32,20 @@ public class CommentController {
             return commentReturn;
         }
 
-        List<Comment> commentList =commentRepository.findAll();
-        Long userId = user.getId();
-        for(Comment comment : commentList){
-            if(comment.getDoctor().getId()==doctorId && comment.getUser().getId()==userId){
 
+        Long userId=user.getId();
+        List<Comment> commentList =commentRepository.findAllByDoctorIdAndUserId(doctorId, userId);
+
+            if(!commentList.isEmpty()){
                 commentReturn.setOk(false);
                 commentReturn.setMsg("상담후기는 상담사당 1회만 작성 가능합니다.");
                 return commentReturn;
             }
-        }
+
 
         Doctor doctor=doctorRepository.findById(doctorId).orElseThrow(
                 () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
         );
-
         commentDto.setDoctor(doctor);
         commentDto.setUser(user);
         commentService.createComment(commentDto);
@@ -59,9 +57,10 @@ public class CommentController {
 
 
 
-    @DeleteMapping("/api/comment/{commentId}")
+    @DeleteMapping("/api/comments/{commentId}")
     public CommentReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn = new CommentReturn();
+
         if(user==null){
             commentReturn.setOk(false);
             commentReturn.setMsg("로그인이 필요한 서비스입니다.");
@@ -77,14 +76,16 @@ public class CommentController {
             commentReturn.setMsg("삭제는 작성자 본인만 가능합니다.");
             return commentReturn;
         }
+        else{
+            commentRepository.deleteById(commentId);
+            commentReturn.setOk(true);
+            commentReturn.setMsg("삭제가 완료되었습니다.");
+            return commentReturn;
+        }
 
-        commentRepository.deleteById(commentId);
-        commentReturn.setOk(true);
-        commentReturn.setMsg("삭제가 완료되었습니다.");
-        return commentReturn;
     }
 
-    @PutMapping("/api/comment/{commentId}")
+    @PutMapping("/api/comments/{commentId}")
     public CommentReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
         CommentReturn commentReturn = new CommentReturn();
         if(user==null){
@@ -95,13 +96,13 @@ public class CommentController {
 
         commentDto.setId(commentId);
         commentDto.setUser(user);
-        if(!commentService.updateComment(commentDto)){
-            commentReturn.setOk(false);
-            commentReturn.setMsg("수정은 작성자 본인만 가능합니다");
-        }
-        else{
+        if(commentService.updateComment(commentDto)){
             commentReturn.setOk(true);
             commentReturn.setMsg("수정이 완료되었습니다.");
+        }
+        else{
+            commentReturn.setOk(false);
+            commentReturn.setMsg("수정은 작성자 본인만 가능합니다");
         }
 
         return commentReturn;

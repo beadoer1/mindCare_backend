@@ -64,4 +64,12 @@ public class Doctor extends Timestamped{
         this.daysOfWeek = requestDto.getDaysOfWeek();
         this.workingTime = requestDto.getWorkingTime();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User)
+            return id==((Doctor)obj).id;
+        else
+            return false;
+    }
 }

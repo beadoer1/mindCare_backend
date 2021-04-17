@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @Entity
 public class User extends Timestamped implements UserDetails {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -66,5 +68,13 @@ public class User extends Timestamped implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User)
+            return id==((User)obj).id;
+        else
+            return false;
     }
 }

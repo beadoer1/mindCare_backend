@@ -32,6 +32,7 @@ public class CommentService {
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new NullPointerException("해당 후기가 존재하지 않습니다.")
         );
+
         if(comment.getUser().equals(user)){
             comment.update(commentDto);
             return true;
