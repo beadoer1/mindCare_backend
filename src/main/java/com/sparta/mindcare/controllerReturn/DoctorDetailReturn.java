@@ -12,13 +12,13 @@ import java.util.List;
 public class DoctorDetailReturn {
 
     private Boolean ok;
-    private Doctor results;
+    private Doctor doctor;
     private List<Comment> comments;
     private String msg;
 
     public DoctorDetailReturn(Boolean ok, Doctor doctor, List<Comment> comments, String msg){
         this.ok = ok;
-        this.results=doctor;
+        this.doctor=doctor;
         this.comments=comments;
         this.msg = msg;
     }

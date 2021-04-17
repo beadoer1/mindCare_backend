@@ -17,6 +17,8 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
 
+
+    //후기 db에 저장
     @Transactional
     public void createComment(CommentDto commentDto){
 
@@ -24,6 +26,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    //후기 db에서 수정
     @Transactional
     public boolean updateComment(CommentDto commentDto){
 

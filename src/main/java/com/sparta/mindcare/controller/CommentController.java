@@ -21,11 +21,12 @@ public class CommentController {
     private final DoctorRepository doctorRepository;
     private final CommentService commentService;
 
+    //후기 작성
     @PostMapping("/api/comments/{doctorId}")
     public ResultReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
 
 
-
+        //로그인 확인
         if(user==null)
             return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
 
@@ -40,6 +41,8 @@ public class CommentController {
         Doctor doctor=doctorRepository.findById(doctorId).orElseThrow(
                 () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
         );
+
+        //후기 db에 저장
         commentDto.setDoctor(doctor);
         commentDto.setUser(user);
         commentService.createComment(commentDto);
@@ -49,22 +52,23 @@ public class CommentController {
 
 
 
-
+    //작성한 후기 삭제
     @DeleteMapping("/api/comments/{commentId}")
     public ResultReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
 
-
+        //로그인 확인
         if(user==null)
             return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
-
 
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
         );
 
+        //작성자 본인이 아닌 경우
         if(!comment.getUser().equals(user))
             return new ResultReturn(false, null, "삭제는 작성자 본인만 가능합니다.");
 
+        //작성한 후기 삭제
         else{
             commentRepository.deleteById(commentId);
             return new ResultReturn(true, null, "삭제가 완료되었습니다.");
@@ -72,15 +76,18 @@ public class CommentController {
 
     }
 
+    //작성한 후기 수정
     @PutMapping("/api/comments/{commentId}")
     public ResultReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
 
+        //로그인 확인
         if(user==null)
             return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
 
-
         commentDto.setId(commentId);
         commentDto.setUser(user);
+
+        //작성자 본인이면 후기수정
         if(commentService.updateComment(commentDto))
             return new ResultReturn(true, null, "수정이 완료되었습니다.");
 
