@@ -18,7 +18,7 @@ public class Doctor extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "coffee_name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)

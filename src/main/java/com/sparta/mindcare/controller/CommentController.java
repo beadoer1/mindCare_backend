@@ -1,6 +1,6 @@
 package com.sparta.mindcare.controller;
 
-import com.sparta.mindcare.controllerReturn.CommentReturn;
+import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.dto.CommentDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
@@ -22,25 +22,19 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/api/comments/{doctorId}")
-    public CommentReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
+    public ResultReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
 
-        CommentReturn commentReturn= new CommentReturn();
 
-        if(user==null){
-            commentReturn.setOk(false);
-            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
-            return commentReturn;
-        }
 
+        if(user==null)
+            return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
 
         Long userId=user.getId();
         List<Comment> commentList =commentRepository.findAllByDoctorIdAndUserId(doctorId, userId);
 
-            if(!commentList.isEmpty()){
-                commentReturn.setOk(false);
-                commentReturn.setMsg("상담후기는 상담사당 1회만 작성 가능합니다.");
-                return commentReturn;
-            }
+            if(!commentList.isEmpty())
+                return new ResultReturn(false, null, "상담후기는 상담사당 1회만 작성 가능합니다.");
+
 
 
         Doctor doctor=doctorRepository.findById(doctorId).orElseThrow(
@@ -49,62 +43,49 @@ public class CommentController {
         commentDto.setDoctor(doctor);
         commentDto.setUser(user);
         commentService.createComment(commentDto);
-        commentReturn.setOk(true);
-        commentReturn.setMsg("후기작성이 완료되었습니다.");
-        return commentReturn;
+
+        return new ResultReturn(true, null, "후기작성이 완료되었습니다.");
     }
 
 
 
 
     @DeleteMapping("/api/comments/{commentId}")
-    public CommentReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
-        CommentReturn commentReturn = new CommentReturn();
+    public ResultReturn delete(@PathVariable Long commentId, @AuthenticationPrincipal User user){
 
-        if(user==null){
-            commentReturn.setOk(false);
-            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
-            return commentReturn;
-        }
+
+        if(user==null)
+            return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
+
 
         Comment comment =commentRepository.findById(commentId).orElseThrow(
                 ()->new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
         );
 
-        if(!comment.getUser().equals(user)){
-            commentReturn.setOk(false);
-            commentReturn.setMsg("삭제는 작성자 본인만 가능합니다.");
-            return commentReturn;
-        }
+        if(!comment.getUser().equals(user))
+            return new ResultReturn(false, null, "삭제는 작성자 본인만 가능합니다.");
+
         else{
             commentRepository.deleteById(commentId);
-            commentReturn.setOk(true);
-            commentReturn.setMsg("삭제가 완료되었습니다.");
-            return commentReturn;
+            return new ResultReturn(true, null, "삭제가 완료되었습니다.");
         }
 
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public CommentReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
-        CommentReturn commentReturn = new CommentReturn();
-        if(user==null){
-            commentReturn.setOk(false);
-            commentReturn.setMsg("로그인이 필요한 서비스입니다.");
-            return commentReturn;
-        }
+    public ResultReturn update(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @AuthenticationPrincipal User user){
+
+        if(user==null)
+            return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
+
 
         commentDto.setId(commentId);
         commentDto.setUser(user);
-        if(commentService.updateComment(commentDto)){
-            commentReturn.setOk(true);
-            commentReturn.setMsg("수정이 완료되었습니다.");
-        }
-        else{
-            commentReturn.setOk(false);
-            commentReturn.setMsg("수정은 작성자 본인만 가능합니다");
-        }
+        if(commentService.updateComment(commentDto))
+            return new ResultReturn(true, null, "수정이 완료되었습니다.");
 
-        return commentReturn;
+        else
+            return new ResultReturn(false, null, "수정은 작성자 본인만 가능합니다.");
+
     }
 }
