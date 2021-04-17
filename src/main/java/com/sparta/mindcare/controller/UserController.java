@@ -1,16 +1,18 @@
 package com.sparta.mindcare.controller;
 
 import com.sparta.mindcare.config.JwtTokenProvider;
+import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.controllerReturn.UserReturn;
 import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -54,5 +56,13 @@ public class UserController {
         userReturn.setOk(true);
         userReturn.setMsg("로그인이 완료되었습니다.");
         return userReturn;
+    }
+
+    @GetMapping("/api/logincheck")
+    public ResultReturn loginCheck(@AuthenticationPrincipal User user) {
+        if(user == null){
+            return new ResultReturn(false,"로그인이 필요한 기능입니다.");
+        }
+        return new ResultReturn(true,"로그인 확인!");
     }
 }

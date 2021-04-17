@@ -70,7 +70,8 @@ public class AppointmentService {
         // 기 예약 시간들을 시간대 리스트에 반영
         for(Long i = startTime; i < endTime; i++){ // 9시 ~ 16시 근무인 경우 9시 ~ 9시 50분 , ... , 15시 ~ 15시 50분 까지 상담
             AppointmentTimeCheck timecheck = new AppointmentTimeCheck(Math.toIntExact(i)); // Math.toIntExact 'Long -> int'
-            timecheck.setPossibleAppointment(!alreadyAppointmentTimeList.contains(timecheck.getTime()));
+            timecheck.setPossibleAppointment(!(alreadyAppointmentTimeList.contains(timecheck.getTime())
+                    || timecheck.getTime().isBefore(LocalTime.now())));
             timeList.add(timecheck);
         }
 

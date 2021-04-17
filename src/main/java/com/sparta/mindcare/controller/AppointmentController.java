@@ -39,7 +39,7 @@ public class AppointmentController {
         }
     }
 
-    //
+    // 예약하기
     @PostMapping("/api/appointments/{doctorId}")
     public ResultReturn createAppointment(@PathVariable Long doctorId, @AuthenticationPrincipal User user, @RequestBody Map<String,String> requestDateTime){
         try {
@@ -59,8 +59,8 @@ public class AppointmentController {
 
     // user가 예약한 예약현황 전부 return
     @GetMapping("/api/appointments")
-    public ResultReturn getAppointment(@AuthenticationPrincipal User user) throws NullPointerException{
-        List<Appointment> appointmentList = appointmentRepository.findAllByUserId(user.getId());
+    public ResultReturn getAppointment(@AuthenticationPrincipal User user){
+        List<Appointment> appointmentList = appointmentRepository.findAllByUser(user);
         if(appointmentList.size() == 0) {
             return new ResultReturn(false, appointmentList, "예약 정보가 존재하지 않습니다.");
         }
@@ -69,7 +69,32 @@ public class AppointmentController {
 
     // doctor 예약 가능 날짜, 시간 확인
     @PostMapping("/api/appointments/{doctorId}/date")
-    public ResultReturn getPossibleTime(@PathVariable Long doctorId, @RequestBody Map<String,String> requestDate){ // "2021-04-14"
+    public ResultReturn getPossibleTime(@PathVariable Long doctorId, @RequestBody Map<String,String> requestDate, @AuthenticationPrincipal User user){ // "2021-04-14"
+        if(user == null){
+            return new ResultReturn(false,null,"로그인이 필요한 기능입니다!");
+        }
         return appointmentService.getPossibleTime(doctorId,requestDate);
     }
+
+    @DeleteMapping("/api/appointments/delete/{appointmentId}")
+    public ResultReturn deleteAppointment(@PathVariable Long appointmentId, @AuthenticationPrincipal User user){
+        if(user == null){
+            return new ResultReturn(false,"로그인이 필요한 서비스입니다.");
+        }
+        try {
+            Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
+            );
+            if(!appointment.getUser().getUsername().equals(user.getUsername())){
+                return new ResultReturn(false,"삭제는 작성자 본인만 가능합니다.");
+            }
+        } catch(IllegalArgumentException e){
+            return new ResultReturn(false, e.getMessage());
+        }
+
+        appointmentRepository.deleteById(appointmentId);
+        return new ResultReturn(true, "예약이 취소 되었습니다.");
+    }
+
+
 }
