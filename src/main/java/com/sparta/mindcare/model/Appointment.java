@@ -30,12 +30,10 @@ public class Appointment extends Timestamped{
     @JoinColumn(nullable = false)
     private Doctor doctor;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
+    private Long userId;
 
     public Appointment(AppointmentDto requestDto){
-        this.user = requestDto.getUser();
+        this.userId = requestDto.getUser().getId();
         this.doctor = requestDto.getDoctor();
         this.date = requestDto.getDate();
         this.time = requestDto.getTime();

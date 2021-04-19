@@ -50,7 +50,7 @@ public class AppointmentController {
     // user가 예약한 예약현황 전부 return
     @GetMapping("/api/appointments")
     public ResultReturn getAppointment(@AuthenticationPrincipal User user){
-        List<Appointment> appointmentList = appointmentRepository.findAllByUser(user);
+        List<Appointment> appointmentList = appointmentRepository.findAllByUserId(user.getId());
         if(appointmentList.size() == 0) {
             return new ResultReturn(false, appointmentList, "예약 정보가 존재하지 않습니다.");
         }
@@ -75,7 +75,7 @@ public class AppointmentController {
             Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(
                     () -> new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
             );
-            if(!appointment.getUser().getId().equals(user.getId())){
+            if(!appointment.getUserId().equals(user.getId())){
                 return new ResultReturn(false,"삭제는 작성자 본인만 가능합니다.");
             }
         } catch(IllegalArgumentException e){
