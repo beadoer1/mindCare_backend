@@ -2,8 +2,10 @@ package com.sparta.mindcare.service;
 
 import com.sparta.mindcare.controllerReturn.AppointmentTimeCheck;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
+import com.sparta.mindcare.dto.AppointmentDto;
 import com.sparta.mindcare.model.Appointment;
 import com.sparta.mindcare.model.Doctor;
+import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.AppointmentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
@@ -78,4 +80,17 @@ public class AppointmentService {
         // 확인 결과 반환값 정리
         return new ResultReturn(true,timeList,"상담 가능한 시간을 반환합니다.");
     }
+
+    public void createAppointment(Long doctorId, User user, Map<String,String> requestDateTime) throws IllegalArgumentException{
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new IllegalArgumentException("예약 요청한 상담사가 존재하지 않습니다.")
+        );
+        LocalDate date = LocalDate.parse(requestDateTime.get("date"));
+        LocalTime time = LocalTime.parse(requestDateTime.get("time"));
+        AppointmentDto requestDto = new AppointmentDto(user,doctor,date,time);
+        Appointment appointment = new Appointment(requestDto);
+        appointmentRepository.save(appointment);
+    }
+
+
 }

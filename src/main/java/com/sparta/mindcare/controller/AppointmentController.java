@@ -1,7 +1,6 @@
 package com.sparta.mindcare.controller;
 
 import com.sparta.mindcare.controllerReturn.*;
-import com.sparta.mindcare.dto.AppointmentDto;
 import com.sparta.mindcare.model.Appointment;
 import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.model.User;
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -43,14 +40,7 @@ public class AppointmentController {
     @PostMapping("/api/appointments/{doctorId}")
     public ResultReturn createAppointment(@PathVariable Long doctorId, @AuthenticationPrincipal User user, @RequestBody Map<String,String> requestDateTime){
         try {
-            Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
-                    () -> new IllegalArgumentException("예약 요청한 상담사가 존재하지 않습니다.")
-            );
-            LocalDate date = LocalDate.parse(requestDateTime.get("date"));
-            LocalTime time = LocalTime.parse(requestDateTime.get("time"));
-            AppointmentDto requestDto = new AppointmentDto(user,doctor,date,time);
-            Appointment appointment = new Appointment(requestDto);
-            appointmentRepository.save(appointment);
+            appointmentService.createAppointment(doctorId,user,requestDateTime);
             return new ResultReturn(true,"예약이 완료 되었습니다.");
         }catch(IllegalArgumentException e){
             return new ResultReturn(false,e.getMessage());
@@ -76,7 +66,7 @@ public class AppointmentController {
         return appointmentService.getPossibleTime(doctorId,requestDate);
     }
 
-    @DeleteMapping("/api/appointments/delete/{appointmentId}")
+    @DeleteMapping("/api/appointments/{appointmentId}")
     public ResultReturn deleteAppointment(@PathVariable Long appointmentId, @AuthenticationPrincipal User user){
         if(user == null){
             return new ResultReturn(false,"로그인이 필요한 서비스입니다.");
@@ -85,13 +75,12 @@ public class AppointmentController {
             Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(
                     () -> new IllegalArgumentException("해당 후기가 존재하지 않습니다.")
             );
-            if(!appointment.getUser().getUsername().equals(user.getUsername())){
+            if(!appointment.getUser().getId().equals(user.getId())){
                 return new ResultReturn(false,"삭제는 작성자 본인만 가능합니다.");
             }
         } catch(IllegalArgumentException e){
             return new ResultReturn(false, e.getMessage());
         }
-
         appointmentRepository.deleteById(appointmentId);
         return new ResultReturn(true, "예약이 취소 되었습니다.");
     }

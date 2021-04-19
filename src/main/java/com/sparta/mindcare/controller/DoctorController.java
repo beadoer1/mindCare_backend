@@ -47,9 +47,7 @@ public class DoctorController {
             Doctor doctor = doctorRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
             );
-
             List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
-
             return new DoctorDetailReturn(true, doctor, comments,"반환 성공!");
         }catch(IllegalArgumentException e){
             return new DoctorDetailReturn(false,null, null, e.getMessage());

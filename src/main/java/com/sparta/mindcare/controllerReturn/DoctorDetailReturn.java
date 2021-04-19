@@ -2,9 +2,7 @@ package com.sparta.mindcare.controllerReturn;
 
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
-import com.sparta.mindcare.repository.CommentRepository;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
