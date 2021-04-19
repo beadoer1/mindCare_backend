@@ -125,6 +125,4 @@ public class AppointmentService {
         Appointment appointment = new Appointment(requestDto);
         appointmentRepository.save(appointment);
     }
-
-
 }

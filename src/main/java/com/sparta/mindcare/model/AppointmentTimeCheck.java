@@ -16,7 +16,7 @@ public class AppointmentTimeCheck {
     private Boolean possibleAppointment;
 
     public AppointmentTimeCheck(int hour){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("kk:mm");
         this.time = LocalTime.of(hour,0);
         this.timeEnd = LocalTime.of(hour,50);
         this.stringTime = time.format(formatter);
