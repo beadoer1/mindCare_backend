@@ -10,10 +10,7 @@ import com.sparta.mindcare.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -79,5 +76,11 @@ public class UserController {
             return new ResultReturn(false,"로그인이 필요한 기능입니다.");
         }
         return new ResultReturn(true,"로그인 확인!");
+    }
+
+    @DeleteMapping("/api/user/{userId}")
+    public Long delete(@PathVariable Long userId){
+        userRepository.deleteById(userId);
+        return userId;
     }
 }

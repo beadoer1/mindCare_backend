@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Entity
@@ -41,6 +39,7 @@ public class Doctor extends Timestamped{
 
     @ElementCollection
     private Map<String,Long> workingTime;
+
 
 
     public Doctor(DoctorDto requestDto){

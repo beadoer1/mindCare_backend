@@ -3,14 +3,17 @@ package com.sparta.mindcare.controller;
 import com.sparta.mindcare.controllerReturn.DoctorDetailReturn;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.dto.DoctorDto;
+import com.sparta.mindcare.dto.PartCommentDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.repository.CommentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,8 +50,17 @@ public class DoctorController {
             Doctor doctor = doctorRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
             );
+            List<PartCommentDto> partComments = new ArrayList<PartCommentDto>();
             List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
-            return new DoctorDetailReturn(true, doctor, comments,"반환 성공!");
+            for(Comment comment : comments){
+                Long commentId= comment.getId();
+                String writer= comment.getUsername();
+                String writing= comment.getWriting();
+
+                partComments.add(new PartCommentDto(commentId,writer,writing));
+            }
+
+            return new DoctorDetailReturn(true, doctor, partComments,"반환 성공!");
         }catch(IllegalArgumentException e){
             return new DoctorDetailReturn(false,null, null, e.getMessage());
         }
