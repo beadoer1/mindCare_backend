@@ -25,9 +25,7 @@ public class UserService {
             throw new IllegalArgumentException("닉네임은 최소 3자 이상으로 구성돼야 합니다.");
         }
 
-//        else if(!Pattern.matches(pattern, username)){
-//            throw new IllegalArgumentException("닉네임은 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성돼야 합니다.");
-//        }
+
 
         if(userDto.getPassword().length()<4){
             throw new IllegalArgumentException("패스워드는 최소 4자 이상으로 구성돼야 합니다.");

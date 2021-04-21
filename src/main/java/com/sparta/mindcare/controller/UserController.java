@@ -37,11 +37,7 @@ public class UserController {
         }
 
         return new ResultReturn(true, "마이케어 회원가입이 완료되었습니다.");
-//        return userRepository.save(User.builder()
-//                .username(user.get("username"))
-//                .password(passwordEncoder.encode(user.get("password")))
-//                .phone(user.get("phone"))
-//                .build()).getId();
+
     }
 
     // 로그인

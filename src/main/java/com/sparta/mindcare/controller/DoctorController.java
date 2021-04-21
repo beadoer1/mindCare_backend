@@ -53,9 +53,11 @@ public class DoctorController {
             Doctor doctor = doctorRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
             );
-            List<PartCommentDto> partComments = new ArrayList<PartCommentDto>();
+            List<PartCommentDto> partComments = new ArrayList();
             List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
-
+            if(comments.isEmpty()){
+                return new DoctorDetailReturn(true, doctor, null, 0, "반환 성공");
+            }
             Star star=starRepository.findByDoctorId(id);
             Integer totalNum=star.getTotalNum();
             Integer totalScore= star.getTotalScore();
@@ -69,7 +71,7 @@ public class DoctorController {
 
             return new DoctorDetailReturn(true, doctor, partComments, starScore,"반환 성공!");
         }catch(IllegalArgumentException e){
-            return new DoctorDetailReturn(false,null, null,null, e.getMessage());
+            return new DoctorDetailReturn(false,null, null, 0, e.getMessage());
         }
     }
 

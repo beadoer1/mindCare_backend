@@ -45,6 +45,7 @@ public class CommentController {
                 () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
         );
 
+
         StarDto startDto = new StarDto(doctorId, 1, commentDto.getScore());
         Star star = starService.createStar(startDto);
 

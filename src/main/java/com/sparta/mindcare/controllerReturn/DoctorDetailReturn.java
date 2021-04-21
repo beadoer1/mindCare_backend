@@ -13,10 +13,10 @@ public class DoctorDetailReturn {
     private Boolean ok;
     private Doctor doctor;
     private List<PartCommentDto> comments;
-    private Float starScore;
+    private float starScore;
     private String msg;
 
-    public DoctorDetailReturn(Boolean ok, Doctor doctor, List<PartCommentDto> comments, Float starScore, String msg){
+    public DoctorDetailReturn(Boolean ok, Doctor doctor, List<PartCommentDto> comments, float starScore, String msg){
         this.ok = ok;
         this.doctor=doctor;
         this.comments=comments;
