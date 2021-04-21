@@ -5,17 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -23,8 +17,6 @@ import java.util.stream.Collectors;
 @Builder
 @Entity
 public class User extends Timestamped implements UserDetails {
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

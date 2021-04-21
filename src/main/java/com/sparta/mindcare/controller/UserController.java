@@ -1,6 +1,6 @@
 package com.sparta.mindcare.controller;
 
-import com.sparta.mindcare.config.JwtTokenProvider;
+import com.sparta.mindcare.security.JwtTokenProvider;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.controllerReturn.UserReturn;
 import com.sparta.mindcare.dto.UserDto;
