@@ -1,4 +1,4 @@
-package com.sparta.mindcare.config;
+package com.sparta.mindcare.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

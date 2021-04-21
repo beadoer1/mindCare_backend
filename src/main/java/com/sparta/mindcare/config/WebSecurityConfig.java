@@ -1,19 +1,17 @@
-package com.sparta.mindcare.security;
+package com.sparta.mindcare.config;
 
-import com.sparta.mindcare.config.JwtAuthenticationFilter;
-import com.sparta.mindcare.config.JwtTokenProvider;
+import com.sparta.mindcare.security.JwtAuthenticationFilter;
+import com.sparta.mindcare.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RequiredArgsConstructor
 @EnableWebSecurity

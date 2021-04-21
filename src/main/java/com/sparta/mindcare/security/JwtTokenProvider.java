@@ -1,4 +1,4 @@
-package com.sparta.mindcare.config;
+package com.sparta.mindcare.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -34,8 +34,10 @@ public class JwtTokenProvider {
     public String createToken(String userPk) {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
         Date now = new Date();
-        // 토큰 유효시간 30*4분
-        long tokenValidTime = 120 * 60 * 1000L;
+
+        // 토큰 유효시간 30분
+        long tokenValidTime = 3600 * 60 * 1000L;
+
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
