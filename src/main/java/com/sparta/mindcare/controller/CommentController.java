@@ -2,12 +2,15 @@ package com.sparta.mindcare.controller;
 
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.dto.CommentDto;
+import com.sparta.mindcare.dto.StarDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
+import com.sparta.mindcare.model.Star;
 import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.CommentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.CommentService;
+import com.sparta.mindcare.service.StarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,7 @@ public class CommentController {
     private final CommentRepository commentRepository;
     private final DoctorRepository doctorRepository;
     private final CommentService commentService;
-
+    private final StarService starService;
     //후기 작성
     @PostMapping("/api/comments/{doctorId}")
     public ResultReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){
@@ -42,9 +45,13 @@ public class CommentController {
                 () -> new IllegalArgumentException("상담사 ID가 존재하지 않습니다.")
         );
 
+        StarDto startDto = new StarDto(doctorId, 1, commentDto.getScore());
+        Star star = starService.createStar(startDto);
+
         //후기 db에 저장
         commentDto.setDoctor(doctor);
         commentDto.setUser(user);
+        commentDto.setStar(star);
         commentService.createComment(commentDto);
 
         return new ResultReturn(true, null, "후기작성이 완료되었습니다.");
@@ -70,6 +77,7 @@ public class CommentController {
 
         //작성한 후기 삭제
         else{
+            starService.deleteStar(commentId);
             commentRepository.deleteById(commentId);
             return new ResultReturn(true, null, "삭제가 완료되었습니다.");
         }
@@ -84,6 +92,9 @@ public class CommentController {
         if(user==null)
             return new ResultReturn(false, null, "로그인이 필요한 서비스입니다.");
 
+
+        Star star = starService.updateStar(commentId, commentDto.getScore());
+        commentDto.setStar(star);
         commentDto.setId(commentId);
         commentDto.setUser(user);
 

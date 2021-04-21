@@ -6,6 +6,7 @@ import com.sparta.mindcare.dto.DoctorDto;
 import com.sparta.mindcare.dto.PartCommentDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
+import com.sparta.mindcare.model.Star;
 import com.sparta.mindcare.repository.CommentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.DoctorService;
@@ -53,11 +54,15 @@ public class DoctorController {
             List<PartCommentDto> partComments = new ArrayList<PartCommentDto>();
             List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
             for(Comment comment : comments){
+                Star star=comment.getStar();
+                Integer totalNum=star.getTotalNum();
+                Integer totalScore= star.getTotalScore();
+
                 Long commentId= comment.getId();
                 String writer= comment.getUsername();
                 String writing= comment.getWriting();
-
-                partComments.add(new PartCommentDto(commentId,writer,writing));
+                float score= (float)totalScore/totalNum;
+                partComments.add(new PartCommentDto(commentId,writer,writing, score));
             }
 
             return new DoctorDetailReturn(true, doctor, partComments,"반환 성공!");

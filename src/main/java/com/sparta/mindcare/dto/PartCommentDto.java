@@ -10,11 +10,13 @@ public class PartCommentDto {
     private Long commentId;
     private String username;
     private String writing;
+    private Float score;
 
-    public PartCommentDto(Long commentId, String username, String writing){
+    public PartCommentDto(Long commentId, String username, String writing, Float score){
         this.commentId= commentId;
         this.username= username;
         this.writing= writing;
+        this.score= score;
     }
 
 }
