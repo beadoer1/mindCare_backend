@@ -9,6 +9,7 @@ import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.model.Star;
 import com.sparta.mindcare.repository.CommentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
+import com.sparta.mindcare.repository.StarRepository;
 import com.sparta.mindcare.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class DoctorController {
 
     private final DoctorRepository doctorRepository;
     private final CommentRepository commentRepository;
+    private final StarRepository starRepository;
     private final DoctorService doctorService;
 
     //상담사 전체
@@ -53,21 +55,21 @@ public class DoctorController {
             );
             List<PartCommentDto> partComments = new ArrayList<PartCommentDto>();
             List<Comment> comments = commentRepository.findAllByDoctorId(doctor.getId());
-            for(Comment comment : comments){
-                Star star=comment.getStar();
-                Integer totalNum=star.getTotalNum();
-                Integer totalScore= star.getTotalScore();
 
+            Star star=starRepository.findByDoctorId(id);
+            Integer totalNum=star.getTotalNum();
+            Integer totalScore= star.getTotalScore();
+            float starScore=(totalNum==0) ? 0 : (float)totalScore/totalNum;
+            for(Comment comment : comments){
                 Long commentId= comment.getId();
                 String writer= comment.getUsername();
                 String writing= comment.getWriting();
-                float score= (float)totalScore/totalNum;
-                partComments.add(new PartCommentDto(commentId,writer,writing, score));
+                partComments.add(new PartCommentDto(commentId,writer,writing));
             }
 
-            return new DoctorDetailReturn(true, doctor, partComments,"반환 성공!");
+            return new DoctorDetailReturn(true, doctor, partComments, starScore,"반환 성공!");
         }catch(IllegalArgumentException e){
-            return new DoctorDetailReturn(false,null, null, e.getMessage());
+            return new DoctorDetailReturn(false,null, null,null, e.getMessage());
         }
     }
 
