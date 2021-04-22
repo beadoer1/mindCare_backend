@@ -41,17 +41,19 @@ public class AppointmentService {
             int remainPeriod = Period.between(LocalDate.now(),appointmentList.get(0).getDate()).getDays();
             return new MyPageReturn(true, 0, remainPeriod, appointmentList, "총 1개(예정) 검색 성공");
         }
-        // 평균 상담 주기 산출
-        List<LocalDate> appointmentDateList = new ArrayList<>();
-        for(Appointment appointment : appointmentList){
-            appointmentDateList.add(appointment.getDate());
+        // 평균 상담 주기 산출(상담 완료된 예약에 대해서만)
+        List<Appointment> completedAppointmentList = appointmentRepository.findByUserIdAndCompleted(user.getId(),true, Sort.by("date").ascending());
+        List<LocalDate> completedAppointmentDateList = new ArrayList<>();
+        for(Appointment completedAppointment : completedAppointmentList){
+            completedAppointmentDateList.add(completedAppointment.getDate());
         }
-        Period totPeriod = Period.between(appointmentDateList.get(0),appointmentDateList.get(appointmentDateList.size()-1));
-        float avgPeriod = (float) totPeriod.getDays()/(appointmentDateList.size()-1);
+        Period totPeriod = Period.between(completedAppointmentDateList.get(0),completedAppointmentDateList.get(completedAppointmentDateList.size()-1));
+        float avgPeriod = (float) totPeriod.getDays()/(completedAppointmentDateList.size()-1);
+        avgPeriod = Math.round(avgPeriod*10)/10.0f; // 소수점 첫째 자리까지 표시
 
         // 다음 상담 일자 산출
-        List<LocalDate> notCompletedAppointmentDateList = new ArrayList<>();
         List<Appointment> notCompletedAppointmentList = appointmentRepository.findByUserIdAndCompleted(user.getId(),false, Sort.by("date").ascending());
+        List<LocalDate> notCompletedAppointmentDateList = new ArrayList<>();
         if(notCompletedAppointmentList.size() == 0){
             return new MyPageReturn(true, avgPeriod,0, appointmentList, "예정된 상담이 없습니다.");
         }
