@@ -34,7 +34,7 @@ public class Appointment extends Timestamped{
     private String stringEndTime;
 
     @Column
-    private Boolean complited;
+    private Boolean completed;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -52,10 +52,10 @@ public class Appointment extends Timestamped{
         this.endTime = time.plusMinutes(50);
         this.stringTime = time.format(formatter);
         this.stringEndTime = endTime.format(formatter);
-        this.complited = false;
+        this.completed = false;
     }
 
     public void update(Boolean value){
-        this.complited = value;
+        this.completed = value;
     }
 }

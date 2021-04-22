@@ -132,16 +132,11 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void updateIsComplited(User user){
-        List<Appointment> appointmentList = appointmentRepository.findAllByUserId(user.getId());
+    public void updateIsCompleted(){
+        List<Appointment> appointmentList = appointmentRepository.findByDate(LocalDate.now());
         for(Appointment appointment : appointmentList){
-            if(!appointment.getComplited()){
-                if(appointment.getDate().isBefore(LocalDate.now())) {
-                    appointment.update(true);
-                }else if(appointment.getDate().isEqual(LocalDate.now())
-                        &&appointment.getTime().isBefore(LocalTime.now())){
-                    appointment.update(true);
-                }
+            if(appointment.getTime().isBefore(LocalTime.now())){
+                appointment.update(true);
             }
         }
     }

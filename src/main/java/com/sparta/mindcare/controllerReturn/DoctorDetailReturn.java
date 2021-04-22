@@ -1,7 +1,6 @@
 package com.sparta.mindcare.controllerReturn;
 
 import com.sparta.mindcare.dto.PartCommentDto;
-import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Doctor;
 import lombok.Getter;
 

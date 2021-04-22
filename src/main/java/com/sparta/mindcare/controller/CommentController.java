@@ -14,6 +14,7 @@ import com.sparta.mindcare.service.StarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -24,6 +25,7 @@ public class CommentController {
     private final DoctorRepository doctorRepository;
     private final CommentService commentService;
     private final StarService starService;
+
     //후기 작성
     @PostMapping("/api/comments/{doctorId}")
     public ResultReturn create(@RequestBody CommentDto commentDto, @PathVariable Long doctorId, @AuthenticationPrincipal User user){

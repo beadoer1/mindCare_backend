@@ -1,6 +1,5 @@
 package com.sparta.mindcare.service;
 
-import com.sparta.mindcare.dto.CommentDto;
 import com.sparta.mindcare.dto.StarDto;
 import com.sparta.mindcare.model.Comment;
 import com.sparta.mindcare.model.Star;

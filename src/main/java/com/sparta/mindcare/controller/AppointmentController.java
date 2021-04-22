@@ -51,7 +51,6 @@ public class AppointmentController {
     // user가 예약한 예약현황 전부 return
     @GetMapping("/api/appointments")
     public ResultReturn getAppointment(@AuthenticationPrincipal User user){
-        appointmentService.updateIsComplited(user);
         List<Appointment> appointmentList = appointmentRepository.findAllByUserId(user.getId(), Sort.by("date").ascending().and(Sort.by("time").ascending()));
         if(appointmentList.size() == 0) {
             return new ResultReturn(false, appointmentList, "예약 정보가 존재하지 않습니다.");

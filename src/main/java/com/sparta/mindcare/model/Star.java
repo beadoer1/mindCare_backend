@@ -18,16 +18,23 @@ public class Star {
     private Long doctorId;
 
     @Column(nullable = false)
-    private Integer totalNum=0;
+    private Integer totalNum;
 
     @Column(nullable = false)
-    private Integer totalScore=0;
+    private Integer totalScore;
 
 
     public Star(StarDto startDto){
         this.doctorId= startDto.getDoctorId();
         this.totalNum= startDto.getTotalNum();
         this.totalScore= startDto.getTotalScore();
+    }
+
+    // 임시 생성자(Star 초기 구성을 위함)
+    public Star(Long doctorId){
+        this.doctorId= doctorId;
+        this.totalNum= 0;
+        this.totalScore= 0;
     }
 
     public void add(StarDto starDto){
