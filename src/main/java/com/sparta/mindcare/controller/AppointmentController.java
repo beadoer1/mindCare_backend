@@ -1,5 +1,6 @@
 package com.sparta.mindcare.controller;
 
+import com.sparta.mindcare.controllerReturn.MyPageReturn;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.model.Appointment;
 import com.sparta.mindcare.model.Doctor;
@@ -8,11 +9,9 @@ import com.sparta.mindcare.repository.AppointmentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import com.sparta.mindcare.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,12 +49,8 @@ public class AppointmentController {
 
     // user가 예약한 예약현황 전부 return
     @GetMapping("/api/appointments")
-    public ResultReturn getAppointment(@AuthenticationPrincipal User user){
-        List<Appointment> appointmentList = appointmentRepository.findAllByUserId(user.getId(), Sort.by("date").ascending().and(Sort.by("time").ascending()));
-        if(appointmentList.size() == 0) {
-            return new ResultReturn(false, appointmentList, "예약 정보가 존재하지 않습니다.");
-        }
-        return new ResultReturn(true, appointmentList, "검색 성공!");
+    public MyPageReturn getAppointment(@AuthenticationPrincipal User user){
+        return appointmentService.getAppointment(user);
     }
 
     // doctor 예약 가능 날짜, 시간 확인

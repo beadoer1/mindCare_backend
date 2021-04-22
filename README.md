@@ -22,7 +22,7 @@
 - RDB 엔진 : MySQL
 
 ### ER Diagram
-![ERDiagram](src/image/ERDiagram.png)
+![ERDiagram](src/image/ERDiagram.png)  
 
 ### 주요 구현 기능(APIs, DB 구축)
 1. 로그인/회원가입 

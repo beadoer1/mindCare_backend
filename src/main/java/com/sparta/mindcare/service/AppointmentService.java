@@ -1,22 +1,25 @@
 package com.sparta.mindcare.service;
 
-import com.sparta.mindcare.model.AppointmentTimeCheck;
+import com.sparta.mindcare.controllerReturn.MyPageReturn;
 import com.sparta.mindcare.controllerReturn.ResultReturn;
 import com.sparta.mindcare.dto.AppointmentDto;
 import com.sparta.mindcare.model.Appointment;
+import com.sparta.mindcare.model.AppointmentTimeCheck;
 import com.sparta.mindcare.model.Doctor;
 import com.sparta.mindcare.model.User;
 import com.sparta.mindcare.repository.AppointmentRepository;
 import com.sparta.mindcare.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -26,6 +29,38 @@ public class AppointmentService {
 
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+
+    public MyPageReturn getAppointment(User user){
+        List<Appointment> appointmentList = appointmentRepository.findByUserId(user.getId(), Sort.by("date").ascending().and(Sort.by("time").ascending()));
+        if(appointmentList.size() == 0) {
+            return new MyPageReturn(false,0,0, appointmentList, "예약 정보가 존재하지 않습니다.");
+        }else if(appointmentList.size() == 1) {
+            if (appointmentList.get(0).getDate().isBefore(LocalDate.now())) {
+                return new MyPageReturn(true, 0, 0, appointmentList, "총 1개(과거) 검색 성공");
+            }
+            int remainPeriod = Period.between(LocalDate.now(),appointmentList.get(0).getDate()).getDays();
+            return new MyPageReturn(true, 0, remainPeriod, appointmentList, "총 1개(예정) 검색 성공");
+        }
+        // 평균 상담 주기 산출
+        List<LocalDate> appointmentDateList = new ArrayList<>();
+        for(Appointment appointment : appointmentList){
+            appointmentDateList.add(appointment.getDate());
+        }
+        Period totPeriod = Period.between(appointmentDateList.get(0),appointmentDateList.get(appointmentDateList.size()-1));
+        float avgPeriod = (float) totPeriod.getDays()/(appointmentDateList.size()-1);
+
+        // 다음 상담 일자 산출
+        List<LocalDate> notCompletedAppointmentDateList = new ArrayList<>();
+        List<Appointment> notCompletedAppointmentList = appointmentRepository.findByUserIdAndCompleted(user.getId(),false, Sort.by("date").ascending());
+        if(notCompletedAppointmentList.size() == 0){
+            return new MyPageReturn(true, avgPeriod,0, appointmentList, "예정된 상담이 없습니다.");
+        }
+        for(Appointment notCompletedAppointment : notCompletedAppointmentList){
+            notCompletedAppointmentDateList.add(notCompletedAppointment.getDate());
+        }
+        int remainPeriod = Period.between(LocalDate.now(),notCompletedAppointmentDateList.get(0)).getDays();
+        return new MyPageReturn(true, avgPeriod, remainPeriod, appointmentList, "예정된 상담이 존재 합니다.");
+    }
 
     public ResultReturn getPossibleTime(Long doctorId, Map<String,String> requestDate){
         // 1. 사용자가 선택한 날짜에 상담사가 근무하는지 확인
@@ -105,7 +140,7 @@ public class AppointmentService {
         }
         // doctor의 근무 시간을 불러옴
         Map<String,Long> workingTime = doctor.getWorkingTime();
-        LocalTime startTime = LocalTime.of(Math.toIntExact(workingTime.get("startTime")),0);;
+        LocalTime startTime = LocalTime.of(Math.toIntExact(workingTime.get("startTime")),0);
         LocalTime endTime = LocalTime.of(Math.toIntExact(workingTime.get("endTime")),0);
 
         if(user == null){
