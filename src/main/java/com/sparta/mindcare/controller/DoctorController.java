@@ -62,6 +62,7 @@ public class DoctorController {
             Integer totalNum=star.getTotalNum();
             Integer totalScore= star.getTotalScore();
             float starScore=(totalNum==0) ? 0 : (float)totalScore/totalNum;
+            starScore= (float)(Math.round((starScore) * 10) / 10.0);
             for(Comment comment : comments){
                 Long commentId= comment.getId();
                 String writer= comment.getUsername();
